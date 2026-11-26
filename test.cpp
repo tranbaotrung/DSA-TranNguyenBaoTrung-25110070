@@ -1,5 +1,10 @@
-#include <bits/stdc++.h>
-
+#include <iostream>
+#include <vector>
+#include <string>
+#include <fstream>
+#include <chrono>
+#include <random>
+#include <algorithm>
 using namespace std;
 using namespace std::chrono;
 
@@ -93,6 +98,35 @@ bool bubbleSort(vector<Bid>& v) {
     }
 }
 
+void generateSmallTestFile(const string& filename) {
+    ofstream out(filename);
+    if (!out) {
+        cout << "Loi: Khong the tao file " << filename << "\n";
+        return;
+    }
+
+    // 4 dong mau cua Task A & Task B
+    out << "alice 100.0 1000 1\n";
+    out << "bob 102.5 1005 1\n";
+    out << "carol 101.0 1003 1\n";
+    out << "dave 103.0 1010 1\n";
+
+    // Edge cases: trung amount (kiem tra tie-breaker theo timestamp)
+    out << "bidder_a 100.0 1005 1\n";
+    out << "bidder_b 100.0 1002 1\n";
+    out << "bidder_c 100.0 1001 1\n";
+
+    // Edge cases: so thuc sat nhau va 0.0 / -0.0
+    out << "bidder_d 100.0000000000001 10 2\n";
+    out << "bidder_e 100.0000000000002 11 2\n";
+    out << "bidder_f 0.0 10 2\n";
+    out << "bidder_h -0.0 11 2\n";
+    out << "bidder_g 0.0001 12 2\n";
+
+    out.close();
+    cout << ">> Da tao thanh cong file: " << filename << "\n";
+}
+
 // Hàm sinh dữ liệu ngẫu nhiên (dùng LLM để làm hàm này ạ)
 void generateLargeTestFile(const string& filename, int num_records) {
     ofstream out(filename);
@@ -145,6 +179,7 @@ void quickSortWrapper(vector<Bid>& v) {
 
 int main() {
     generateLargeTestFile("test_data/large.txt", 100000);
+    generateSmallTestFile("test_data/small.txt");
     vector<Bid> bids;
     string filepath = "test_data/large.txt";
     loadBids(filepath, bids);
